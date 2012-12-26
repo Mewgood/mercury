@@ -11,7 +11,7 @@
 </p>
 
 <p>
-	<h4>Shell scripts</h4>
+	<h3>Shell scripts</h3>
 	<ul>
 		build.sh - Compiles binary into bin/</br>
 		run.sh - Runs binary in bin/</br>
