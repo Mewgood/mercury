@@ -5,7 +5,7 @@
 
 <h3>Requirements</h3>
 <ul>
-	<li>Poco Library, minimum version 1.4.5.</li>
+	<li>POCO Library, minimum version 1.4.5.</li>
 	<li>Intermediate understanding of C++ and Networking.</li>
 </ul>
 
