@@ -3,14 +3,27 @@
 ChatProtocol::ChatProtocol()
 {
 	mSToken = 0;
+	mCToken = 0;
+	mFileTime = 0;
+	
+	// Set pointers to null
+	mFileName = 0x0;
+	mValueString = 0x0;
 }
 
 ChatProtocol::~ChatProtocol()
 {
+	// Delete memory if allocated
+	if (mFileName)
+		delete [] mFileName;
+	
+	if (mValueString)
+		delete [] mValueString;
 }
 
 bool ChatProtocol::sendProto()
 {
+	// Send required byte of 0x01 to indicate protocol
 	int tmp = _send("\x01", 1);
 	
 	printf("Sent %u of expected %u bytes\n", tmp, 1);
@@ -122,6 +135,14 @@ bool ChatProtocol::parsePacket()
 			char *valuestr = ByteReader::ReadString(16+filename_len, pTemp);
 			unsigned int valuestr_len = strlen(valuestr) + 1;
 			
+			mSToken = servertoken;
+			mFileTime = filetime;
+			
+			mFileName = new char[filename_len];
+			mValueString = new char[valuestr_len];
+			
+			strcpy(mFileName, filename);
+			strcpy(mValueString, valuestr);
 			
 			break;
 		}
