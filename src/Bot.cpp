@@ -34,10 +34,6 @@ Bot::Bot(const char *sHost, const char *sAccount, const char *sPassword, const c
 
 Bot::~Bot()
 {
-}
-
-BotStatus Bot::status()
-{
 	// Delete all stored data if it exists
 	if (mHost)
 		delete [] mHost;
@@ -49,7 +45,10 @@ BotStatus Bot::status()
 		delete [] mKey;
 	if (mXKey)
 		delete [] mXKey;
-	
+}
+
+BotStatus Bot::status()
+{	
 	return mStatus;
 }
 
