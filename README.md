@@ -5,10 +5,12 @@
 <p>
 	<h3>Requirements</h3>
 	<ul>
-		Poco Library, minimum version 1.4.5</br>
+		Poco Library, minimum version 1.4.5.</br>
 		Intermediate understanding of C++ and Networking.
 	</ul>
 </p>
+
+<hr>
 
 <p>
 	<h3>Shell scripts</h3>
