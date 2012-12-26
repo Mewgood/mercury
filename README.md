@@ -16,6 +16,6 @@
 		build.sh - Compiles binary into bin/</br>
 		run.sh - Runs binary in bin/</br>
 		clean.sh - Removes bin/</br>
-		release_build.sh - Compiles binary with optimisations and strict warnings.
+		release_build.sh - Compiles binary with optimisations and stricter warnings.
 	</ul>
 </p>
