@@ -9,12 +9,10 @@
 	<li>Intermediate understanding of C++ and Networking.</li>
 </ul>
 
-<p>
-	<h3>Shell scripts</h3>
-	<ul>
-		<li>build.sh - Compiles binary into bin/</li>
-		<li>run.sh - Runs binary in bin/</li>
-		<li>clean.sh - Removes bin/</li>
-		<li>release_build.sh - Compiles binary with optimisations and stricter warnings.</li>
-	</ul>
-</p>
+<h3>Shell scripts</h3>
+<ul>
+	<li>build.sh - Compiles binary into bin/</li>
+	<li>run.sh - Runs binary in bin/</li>
+	<li>clean.sh - Removes bin/</li>
+	<li>release_build.sh - Compiles binary with optimisations and stricter warnings.</li>
+</ul>
