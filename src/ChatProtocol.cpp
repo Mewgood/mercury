@@ -118,13 +118,20 @@ bool ChatProtocol::parsePacket()
 				printf("Sent %u of expected %u bytes\n", tmp, (nLen+4));
 				if (tmp != (nLen+4)){
 					printf("Error : sent malformed packet... >> 0x25\n");
-					break;
+					return false;
 				}
 				
 				break;
 			}
 		case 0x50:
 		{
+			unsigned int logontype = ByteReader::ReadDWord(0, pTemp);
+			
+			if (logontype != 0x0) {
+				printf("Error : incorrect logon type, also this error should never happen...\n");
+				return false;
+			}
+			
 			unsigned int servertoken = ByteReader::ReadDWord(4, pTemp);
 			unsigned long filetime = ByteReader::ReadQWord(8, pTemp);
 			
