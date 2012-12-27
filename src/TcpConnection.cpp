@@ -11,6 +11,9 @@ TcpConnection::~TcpConnection()
 	if (mSA)
 		delete mSA;
 	
+	if (mConnected)
+		mSock.shutdown();
+	
 	mConnected = false;
 }
 
@@ -19,6 +22,7 @@ bool TcpConnection::_connect(const char *sHost, unsigned short nPort)
 	mSA = new SocketAddress(sHost, nPort);
 	
 	mSock.connect(*mSA);
+	mConnected = true;
 	
 	return true;
 }
