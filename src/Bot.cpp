@@ -87,28 +87,35 @@ bool Bot::run()
 	printf("[%s] Connecting to %s:%u...\n", mAccount, mHost, 6112);
 	if (!Chat._connect(mHost, 6112)) {
 		printf("[%s] Failed to connect to chat server...\n", mAccount);
+		mStatus = Dead;
 		return false;
 	}
 	
+	mStatus = Connecting;
+	
 	if (!Chat.sendProto()) {
 		printf("[%s] Failed to send proto packet...\n", mAccount);
+		mStatus = Dead;
 		return false;
 	}
 	
 	if (!Chat.sendSIDAUTHINFO()) {
 		printf("[%s] Failed to SID_AUTH_INFO <0x50> packet...\n", mAccount);
+		mStatus = Dead;
 		return false;
 	}
 	
 	// 0x25
 	if (!Chat.parsePacket()) {
 		printf("[%s] Failed to parse expected packet... >> 0x25\n", mAccount);
+		mStatus = Dead;
 		return false;
 	}
 	
 	// 0x50
 	if (!Chat.parsePacket()) {
 		printf("[%s] Failed to parse packet... >> 0x50\n", mAccount);
+		mStatus = Dead;
 		return false;
 	}
 	
