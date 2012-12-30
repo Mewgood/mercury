@@ -11,23 +11,23 @@ Bot::Bot(const char *sHost, const char *sAccount, const char *sPassword, const c
 	int nLen = 0;
 	
 	// Create buffers for all data and copy from parameters
-	nLen = strlen(sHost);
+	nLen = strlen(sHost)+1;
 	mHost = new char[nLen];
 	strcpy(mHost, sHost);
 	
-	nLen = strlen(sAccount);
+	nLen = strlen(sAccount)+1;
 	mAccount = new char[nLen];
 	strcpy(mAccount, sAccount);
 	
-	nLen = strlen(sPassword);
+	nLen = strlen(sPassword)+1;
 	mPassword = new char[nLen];
 	strcpy(mPassword, sPassword);
 	
-	nLen = strlen(sKey);
+	nLen = strlen(sKey)+1;
 	mKey = new char[nLen];
 	strcpy(mKey, sKey);
 	
-	nLen = strlen(sXKey);
+	nLen = strlen(sXKey)+1;
 	mXKey = new char[nLen];
 	strcpy(mXKey, sXKey); 
 }
