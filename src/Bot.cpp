@@ -82,7 +82,7 @@ bool Bot::run()
 {
 	mStatus = Connecting;
 	
-	// Connected to ALL protocols here
+	// Connect to ALL protocols here
 	
 	printf("[%s] Connecting to %s:%u...\n", mAccount, mHost, 6112);
 	if (!Chat._connect(mHost, 6112)) {
@@ -99,6 +99,7 @@ bool Bot::run()
 		return false;
 	}
 	
+	// 0x50
 	if (!Chat.sendSIDAUTHINFO()) {
 		printf("[%s] Failed to SID_AUTH_INFO <0x50> packet...\n", mAccount);
 		mStatus = Dead;
@@ -120,6 +121,6 @@ bool Bot::run()
 	}
 	
 	
-	printf("[%s] Bot reached end thread, shutting down...\n", mAccount);
+	printf("[%s] Bot reached end of thread, shutting down...\n", mAccount);
 	return true;
 }
