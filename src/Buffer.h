@@ -26,6 +26,7 @@ class Buffer {
 		void addQWord(long nBytes);
 		void addString(const char* pString);
 		void addNTString(const char* pString);
+		void copyMem(const char* pData, unsigned short nLength);
 };
 
 #endif /* __BUFFER_H__ */

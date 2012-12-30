@@ -157,3 +157,30 @@ void Buffer::addNTString(const char* pString)
 	addString(pString);
 	addByte(0x00);
 }
+
+void Buffer::copyMem(const char* pData, unsigned short nLength)
+{
+	if (nLength <= 0 && (!pData))
+		return;
+	
+	if (m_Buffer) {
+		if (m_Temp)
+			free(m_Temp);
+		
+		m_Temp = (char*)malloc(m_Size);
+		memcpy(m_Temp, m_Buffer, m_Size);
+		free(m_Buffer);
+		
+		m_Buffer = (char*)malloc(m_Size + nLength);
+		memcpy(m_Buffer, m_Temp, m_Size);
+		memcpy(m_Buffer + m_Size, pData, nLength);
+		
+		free(m_Temp);
+		m_Temp = 0;
+	} else {
+		m_Buffer = (char*)malloc(nLength);
+		memcpy(m_Buffer, pData, nLength);
+	}
+	
+	m_Size += nLength;
+}
