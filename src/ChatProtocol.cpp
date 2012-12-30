@@ -94,8 +94,8 @@ bool ChatProtocol::parsePacket()
 		return false;
 	}
 	
-	char cId = ByteReader::ReadByte(1, pTemp);
-	unsigned short nLen = ByteReader::ReadWord(2, pTemp);
+	char cId = ByteReader::readByte(1, pTemp);
+	unsigned short nLen = ByteReader::readWord(2, pTemp);
 	
 	delete [] pTemp;
 	
@@ -129,21 +129,21 @@ bool ChatProtocol::parsePacket()
 			}
 		case 0x50:
 		{
-			unsigned int logontype = ByteReader::ReadDWord(0, pTemp);
+			unsigned int logontype = ByteReader::readDWord(0, pTemp);
 			
 			if (logontype != 0x0) {
 				printf("Error : incorrect logon type, also this error should never happen...\n");
 				return false;
 			}
 			
-			unsigned int servertoken = ByteReader::ReadDWord(4, pTemp);
-			unsigned long filetime = ByteReader::ReadQWord(8, pTemp);
+			unsigned int servertoken = ByteReader::readDWord(4, pTemp);
+			unsigned long filetime = ByteReader::readQWord(8, pTemp);
 			
 			// Create pointers to, and calculate string lengths
-			char *filename = ByteReader::ReadString(16, pTemp);
+			char *filename = ByteReader::readString(16, pTemp);
 			unsigned int filename_len = strlen(filename) + 1;
 			
-			char *valuestr = ByteReader::ReadString(16+filename_len, pTemp);
+			char *valuestr = ByteReader::readString(16+filename_len, pTemp);
 			unsigned int valuestr_len = strlen(valuestr) + 1;
 			
 			mSToken = servertoken;

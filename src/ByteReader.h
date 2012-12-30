@@ -5,11 +5,11 @@
 
 namespace ByteReader
 {
-	unsigned char ReadByte(int nOffset, char* pData);
-	unsigned short ReadWord(int nOffset, char* pData);
-	unsigned int ReadDWord(int nOffset, char* pData);
-	unsigned long long ReadQWord(int nOffset, char* pData);
-	char* ReadString(int nOffset, char* pData);					// Will only stop at null-terminator '\0'.
+	unsigned char readByte(int nOffset, char* pData);
+	unsigned short readWord(int nOffset, char* pData);
+	unsigned int readDWord(int nOffset, char* pData);
+	unsigned long long readQWord(int nOffset, char* pData);
+	char* readString(int nOffset, char* pData);					// Will only stop at null-terminator '\0'.
 }
 
 #endif /* __BYTEREADER_H__ */
