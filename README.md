@@ -1,18 +1,24 @@
-<p><h1>Vox</h1></p>
+# Vox
 
-<p><h2>An emulation of the Diablo 2 expansion client.</h2></p>
+## An emulation of the Diablo II Expansion client.
 
+### Requirements
+* POCO Library, minimum version 1.4.5. [Get it here](http://pocoproject.org/)
+* Intermediate understanding of C++ and Networking.
 
-<h3>Requirements</h3>
-<ul>
-	<li>POCO Library, minimum version 1.4.5. <a href="http://pocoproject.org/">Get it here.</a></li>
-	<li>Intermediate understanding of C++ and Networking.</li>
-</ul>
+### Makefile
+```make
+# Compiles binary into bin/ d
+make vox
 
-<h3>Shell scripts</h3>
-<ul>
-	<li>build.sh - Compiles binary into bin/</li>
-	<li>run.sh - Runs binary in bin/</li>
-	<li>clean.sh - Removes bin/</li>
-	<li>release_build.sh - Compiles binary with optimisations and stricter warnings.</li>
-</ul>
+# Removes binary from bin/
+make clean
+```
+
+### run.sh
+Runs binary in bin/ directory
+```sh
+./vox "SERVER" "ACCOUNT" "PASSWORD" "CDKEY" "EXPANSION_KEY"
+
+# Encase all fields in quotes ("")
+```
