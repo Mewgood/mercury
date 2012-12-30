@@ -24,3 +24,4 @@ $(NAME) : $(OBJECTS)
 # Remove $(NAME) from bin/
 clean:
 	@rm -f bin/$(NAME)
+	@rm -f $(OBJECTS)
