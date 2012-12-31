@@ -80,9 +80,15 @@ void Bot::printStatus()
 
 bool Bot::run()
 {
-	mStatus = Connecting;
+	printf("Configuration for [%s]\nAccount : %s\nPassword : %s\nKey : %s \nXKey : %s\n", mAccount, mAccount, mPassword, mKey, mXKey);
+	if (!Chat.setData(mAccount, mPassword, mKey, mXKey)) {
+		printf("[%s] Failed to set configuration...\n", mAccount);
+		mStatus = Dead;
+		return false;
+	}
 	
-	// Connect to ALL protocols here
+	// Connect to protocols, wrap later
+	mStatus = Connecting;
 	
 	printf("[%s] Connecting to %s:%u...\n", mAccount, mHost, 6112);
 	if (!Chat._connect(mHost, 6112)) {
