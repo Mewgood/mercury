@@ -7,10 +7,12 @@
 
 class ChatProtocol : public TcpConnection {
 	private:
+		// Account information
+		char *mAccount, *mPassword, *mKey, *mXKey;
+		
+		// Hashing values and what not
 		unsigned int mSToken, mCToken;
-		
 		unsigned long mFileTime;
-		
 		char *mFileName, *mValueString;
 		
 		bool sendPacket(char cId, unsigned short nLength, char *pData);
@@ -18,6 +20,7 @@ class ChatProtocol : public TcpConnection {
 		ChatProtocol();
 		~ChatProtocol();
 		
+		bool setData(const char *sAccount, const char *sPassword, const char *sKey, const char *sXKey);
 		bool sendProto();
 		bool sendSIDAUTHINFO();
 		

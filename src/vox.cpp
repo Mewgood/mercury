@@ -20,8 +20,7 @@ int main(int argc, const char *argv[])
 	}*/
 	
 	Bot Apoc(argv[1], argv[2], argv[3], argv[4], argv[5]);
-	Apoc.printStatus();
-	
+	//Apoc.printStatus();
 	Apoc.run();
 	
 	return 0;

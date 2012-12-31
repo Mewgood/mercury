@@ -2,6 +2,11 @@
 
 ChatProtocol::ChatProtocol()
 {
+	mAccount = 0;
+	mPassword = 0;
+	mKey = 0;
+	mXKey = 0;
+	
 	mSToken = 0;
 	mCToken = 0;
 	mFileTime = 0;
@@ -14,6 +19,18 @@ ChatProtocol::ChatProtocol()
 ChatProtocol::~ChatProtocol()
 {
 	// Delete memory if allocated
+	if (mAccount)
+		delete [] mAccount;
+	
+	if (mPassword)
+		delete [] mPassword;
+	
+	if (mKey)
+		delete [] mKey;
+	
+	if (mXKey)
+		delete [] mXKey;
+	
 	if (mFileName)
 		delete [] mFileName;
 	
@@ -39,6 +56,41 @@ bool ChatProtocol::sendPacket(char cId, unsigned short nLength, char *pData)
 	}
 	
 	printf("[BNCS] 0x%02X | Sent %u bytes\n", cId, len);
+	
+	return true;
+}
+
+bool ChatProtocol::setData(const char *sAccount, const char *sPassword, const char *sKey, const char *sXKey)
+{
+	int len = strlen(sAccount);
+	if (len < 1)
+		return false;
+	len++;
+	mAccount = new char[len];
+	strcpy(mAccount, sAccount);
+	len = 0;
+	
+	int len = strlen(sPassword);
+	if (len < 1)
+		return false;
+	len++;
+	mPassword = new char[len];
+	strcpy(mPassword, sPassword);
+	len = 0;
+	
+	int len = strlen(sKey);
+	if (len < 1)
+		return false;
+	len++;
+	strcpy(mKey, sKey);
+	len = 0;
+	
+	int len = strlen(sXKey);
+	if (len < 1)
+		return false;
+	len++;
+	strcpy(mXKey, sXKey);
+	len = 0;
 	
 	return true;
 }
