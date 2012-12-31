@@ -11,7 +11,7 @@ OBJECTS := $(patsubst %.cpp,%.o,$(SOURCES))
 INCLUDE_DIRS := src
 
 # Add optimisations and remove debugging symbols
-CPPFLAGS +=-g -Wall -Wextra -Wno-multichar -lPocoNet
+CPPFLAGS +=-g -Wall -Wno-multichar -lPocoNet
 
 .PHONY: all build clean
 
