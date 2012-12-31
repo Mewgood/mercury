@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include "TcpConnection.h"
+#include "util/check_revision.hpp"
 
 class ChatProtocol : public TcpConnection {
 	private:
