@@ -70,7 +70,7 @@ bool ChatProtocol::setData(const char *sAccount, const char *sPassword, const ch
 	strcpy(mAccount, sAccount);
 	len = 0;
 	
-	int len = strlen(sPassword);
+	len = strlen(sPassword);
 	if (len < 1)
 		return false;
 	len++;
@@ -78,14 +78,14 @@ bool ChatProtocol::setData(const char *sAccount, const char *sPassword, const ch
 	strcpy(mPassword, sPassword);
 	len = 0;
 	
-	int len = strlen(sKey);
+	len = strlen(sKey);
 	if (len < 1)
 		return false;
 	len++;
 	strcpy(mKey, sKey);
 	len = 0;
 	
-	int len = strlen(sXKey);
+	len = strlen(sXKey);
 	if (len < 1)
 		return false;
 	len++;
