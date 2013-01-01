@@ -251,7 +251,7 @@ bool ChatProtocol::parsePacket()
 			printf("[%s] Generated CDKey hashes sucessfully.\n", mAccount);
 			
 			// Copy hash values
-			mKeyPublic = ByteReader::readDWord(0, const_char<char*>(d2pub.data()));
+			mKeyPublic = ByteReader::readDWord(0, const_cast<char*>(d2pub.data()));
 			for (int x=0; x<5; x++){
 				mKeyHash[x] = ByteReader::readDWord(x*4, const_cast<char*>(d2hash.data()));
 			}

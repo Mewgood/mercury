@@ -11,7 +11,7 @@ int main(int argc, const char *argv[])
 	printf("%s - Version %.1f\n", PROGRAM, VERSION);
 	
 	if (argc < 6) { // Update to 6 when accepting all arguments.
-		printf("USAGE: ./%s [HOST] [ACCOUNT] [PASS] [KEY] [XPACKEY]\n", PROGRAM);
+		printf("USAGE: %s [server] [account] [password] [classic_key] [expansion_key]\n", argv[0]);
 		return 0;
 	}
 	
