@@ -25,9 +25,7 @@ make
 make clean
 ```
 
-### run.sh
-Runs binary in bin/ directory
-```sh
-# Encase all fields in quotes ("")
-./vox "SERVER" "ACCOUNT" "PASSWORD" "CDKEY" "EXPANSION_KEY"
+### Usage
+```
+./vox [server] [account] [password] [classic_key] [expansion_key]
 ```
