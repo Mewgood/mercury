@@ -251,6 +251,7 @@ bool ChatProtocol::parsePacket()
 				printf("[%s] Failed to hash D2XP CDKey. %s\nclient_token %u\nserver_token %u\n", mAccount, mXKey, mCToken, mSToken);
 				return false;
 			}
+			printf("[%s] Generated D2Xp CDKey hash.\n", mAccount);
 			
 			break;
 		}
