@@ -25,6 +25,7 @@ class ChatProtocol : public TcpConnection {
 		bool sendPacket(char cId, unsigned short nLength, char *pData);
 		bool genChecksum(std::string sDirectory);
 		bool genKeyHashes();
+		bool parseHashResult(char *pTemp);
 	public:
 		ChatProtocol();
 		~ChatProtocol();
@@ -33,7 +34,7 @@ class ChatProtocol : public TcpConnection {
 					const char *sExeInfo, const char *sOwner);
 		bool sendProto();
 		bool sendSIDAUTHINFO();
-		//bool send
+		bool sendSIDAUTHCHECK();
 		
 		bool parsePacket();
 };

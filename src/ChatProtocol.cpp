@@ -126,6 +126,55 @@ bool ChatProtocol::genKeyHashes()
 	return true;
 }
 
+bool ChatProtocol::parseHashResult(char *pTemp)
+{
+	unsigned int result = ByteReader::readDWord(0, pTemp);
+			
+	switch (result)
+	{
+		case 0x000:
+			printf("[%s] Passed hash challenge.\n", mAccount);
+			break;
+		case 0x100:
+			printf("[%s] Old game version. %s\n", mAccount, ByteReader::readString(4, pTemp));
+			return false;
+		case 0x101:
+			printf("[%s] Invalid version.\n", mAccount);
+			return false;
+		case 0x102:
+			printf("[%s] Game version must be downgraded. %s\n", mAccount, ByteReader::readString(4, pTemp));
+			return false;
+		case 0x200:
+			printf("[%s] Invalid CDKey (Classic), IPBan for 24hours...\n", mAccount);
+			return false;
+		case 0x201:
+			printf("[%s] CDKey inuse by : %s (Classic)\n", mAccount, ByteReader::readString(4, pTemp));
+			return false;
+		case 0x202:
+			printf("[%s] Banned CDKey. (Classic)\n", mAccount);
+			return false;
+		case 0x203:
+			printf("[%s] Wrong product. (Classic)\n", mAccount);
+			return false;
+		case 0x210:
+			printf("[%s] Invalid CDKey (Expansion), IPBan for 24hours...\n", mAccount);
+			return false;
+		case 0x211:
+			printf("[%s] CDKey inuse by : %s (Expansion)\n", mAccount, ByteReader::readString(4, pTemp));
+			return false;
+		case 0x212:
+			printf("[%s] Banned CDKey. (Expansion)\n", mAccount);
+			return false;
+		case 0x213:
+			printf("[%s] Wrong product. (Expansion)\n", mAccount);
+			return false;
+		default:
+			printf("[%s] Unknown error, code : 0x%03X\n", mAccount, result);
+			return false;
+	}
+	return true;
+}
+
 bool ChatProtocol::setData(const char *sAccount, const char *sPassword, const char *sKey, const char *sXKey, unsigned int nCToken,
 							const char *sExeInfo, const char *sOwner)
 {
@@ -218,6 +267,40 @@ bool ChatProtocol::sendSIDAUTHINFO()
 	return sendPacket(0x50, buf.getSize(), buf.getBuffer());
 }
 
+bool ChatProtocol::sendSIDAUTHCHECK()
+{
+	Buffer Packet;
+	
+	Packet.addDWord(mCToken);
+	Packet.addDWord(0x0D030101);
+	Packet.addDWord(mChecksum);
+	Packet.addDWord(2);			// 2 CDKeys
+	Packet.addDWord(0);
+	
+	// Classic
+	Packet.addDWord(16);
+	Packet.addDWord(0x06);
+	Packet.addDWord(mKeyPublic);
+	Packet.addDWord(0);
+	for (int x=0; x<5; x++){
+		Packet.addDWord(mKeyHash[x]);
+	}
+	
+	// Expasion
+	Packet.addDWord(16);
+	Packet.addDWord(0x0A);
+	Packet.addDWord(mXKeyPublic);
+	Packet.addDWord(0);
+	for (int x=0; x<5; x++){
+		Packet.addDWord(mXKeyHash[x]);
+	}
+	
+	Packet.addNTString(mExeInfo);
+	Packet.addNTString(mOwner);
+	
+	return sendPacket(0x51, Packet.getSize(), Packet.getBuffer());
+}
+
 bool ChatProtocol::parsePacket()
 {
 	// Receive packet, header only (4 bytes)
@@ -263,10 +346,10 @@ bool ChatProtocol::parsePacket()
 	switch (cId)
 	{
 		case 0x25:
-			{
-				sendPacket(0x25, 4, pTemp);				
-				break;
-			}
+		{
+			sendPacket(0x25, 4, pTemp);				
+			break;
+		}
 		case 0x50:
 		{
 			unsigned int logontype = ByteReader::readDWord(0, pTemp);
@@ -306,6 +389,12 @@ bool ChatProtocol::parsePacket()
 			}
 			
 			break;
+		}
+		case 0x51:
+		{
+			if (!parseHashResult(pTemp)){
+				return false;
+			}
 		}
 	}
 	

@@ -120,7 +120,7 @@ bool Bot::run()
 	
 	// 0x50
 	if (!Chat.sendSIDAUTHINFO()) {
-		printf("[%s] Failed to SID_AUTH_INFO <0x50> packet...\n", mAccount);
+		printf("[%s] Failed to send SID_AUTH_INFO <0x50> packet...\n", mAccount);
 		mStatus = Dead;
 		return false;
 	}
@@ -138,6 +138,20 @@ bool Bot::run()
 		mStatus = Dead;
 		return false;
 	}	
+	
+	// 0x51
+	if (!Chat.sendSIDAUTHCHECK()){
+		printf("[%s] Failed to send SID_AUTH_CHECK <0x51> packet...\n", mAccount);
+		mStatus = Dead;
+		return false;
+	}
+	
+	// 0x51
+	if (!Chat.parsePacket()){
+		printf("[%s] Failed to parse packet... >> 0x51\n", mAccount);
+		mStatus = Dead;
+		return false;
+	}
 	
 	printf("[%s] Bot reached end of thread, shutting down...\n", mAccount);
 	return true;
