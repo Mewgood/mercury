@@ -257,6 +257,10 @@ bool ChatProtocol::parsePacket()
 			}
 			
 			// Repeat for expansion
+			mXKeyPublic = ByteReader::readDWord(0, const_cast<char*>(xppub.data()));
+			for (int x=0; x<5; x++){
+				mXKeyHash[x] = ByteReader::readDWord(x*4, const_cast<char*>(xphash.data()));
+			}
 			
 			break;
 		}
