@@ -1,6 +1,7 @@
 #include "Bot.h"
 
-Bot::Bot(const char *sHost, const char *sAccount, const char *sPassword, const char *sKey, const char *sXKey)
+Bot::Bot(const char *sHost, const char *sAccount, const char *sPassword, const char *sKey, const char *sXKey,
+		const char *sExeInfo, const char *sOwner)
 {
 	// Set all pointers to null
 	mHost = 0; mAccount = 0; mPassword = 0; mKey = 0; mXKey = 0;
@@ -30,6 +31,14 @@ Bot::Bot(const char *sHost, const char *sAccount, const char *sPassword, const c
 	nLen = strlen(sXKey)+1;
 	mXKey = new char[nLen];
 	strcpy(mXKey, sXKey); 
+	
+	nLen = strlen(sExeInfo)+1;
+	mExeInfo = new char[nLen];
+	strcpy(mExeInfo, sExeInfo);
+	
+	nLen = strlen(sOwner)+1;
+	mOwner = new char[nLen];
+	strcpy(mOwner, sOwner);
 }
 
 Bot::~Bot()
@@ -45,6 +54,10 @@ Bot::~Bot()
 		delete [] mKey;
 	if (mXKey)
 		delete [] mXKey;
+	if (mExeInfo)
+		delete [] mExeInfo;
+	if (mOwner)
+		delete [] mOwner;
 }
 
 BotStatus Bot::status()
@@ -81,7 +94,7 @@ void Bot::printStatus()
 bool Bot::run()
 {
 	mCToken = get_tick_count();
-	if (!Chat.setData(mAccount, mPassword, mKey, mXKey, mCToken)) {
+	if (!Chat.setData(mAccount, mPassword, mKey, mXKey, mCToken, mExeInfo, mOwner)) {
 		printf("[%s] Failed to set configuration...\n", mAccount);
 		mStatus = Dead;
 		return false;

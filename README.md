@@ -27,5 +27,7 @@ make clean
 
 ### Usage
 ```
-./vox [server] [account] [password] [classic_key] [expansion_key]
+./vox [server] [account] [password] [classic_key] [expansion_key] [exe_info] [key_owner]
+# Sample exe_info "game.exe 10/19/11 19:48:14 65536"
+# Key owner must be less then 16 characters
 ```

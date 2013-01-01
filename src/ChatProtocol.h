@@ -10,7 +10,7 @@
 class ChatProtocol : public TcpConnection {
 	private:
 		// Account information
-		char *mAccount, *mPassword, *mKey, *mXKey;
+		char *mAccount, *mPassword, *mKey, *mXKey, *mExeInfo, *mOwner;
 		
 		// Hashing values and what not
 		unsigned int mSToken, mCToken;
@@ -29,10 +29,11 @@ class ChatProtocol : public TcpConnection {
 		ChatProtocol();
 		~ChatProtocol();
 		
-		bool setData(const char *sAccount, const char *sPassword, const char *sKey, const char *sXKey, unsigned int nCToken);
+		bool setData(const char *sAccount, const char *sPassword, const char *sKey, const char *sXKey, unsigned int nCToken,
+					const char *sExeInfo, const char *sOwner);
 		bool sendProto();
 		bool sendSIDAUTHINFO();
-		bool send
+		//bool send
 		
 		bool parsePacket();
 };

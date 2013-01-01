@@ -20,13 +20,14 @@ class Bot {
 	private:
 		ChatProtocol Chat;
 		
-		char *mHost, *mAccount, *mPassword, *mKey, *mXKey;
+		char *mHost, *mAccount, *mPassword, *mKey, *mXKey, *mExeInfo, *mOwner;
 		
 		unsigned int mSToken, mCToken;
 		
 		BotStatus mStatus;
 	public:
-		Bot(const char *sHost, const char *sAccount, const char *sPassword, const char *sKey, const char *sXKey);
+		Bot(const char *sHost, const char *sAccount, const char *sPassword, const char *sKey, const char *sXKey,
+			const char *sExeInfo, const char *sOwner);
 		~Bot();
 		
 		BotStatus status();

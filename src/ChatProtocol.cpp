@@ -6,6 +6,8 @@ ChatProtocol::ChatProtocol()
 	mPassword = 0;
 	mKey = 0;
 	mXKey = 0;
+	mExeInfo = 0;
+	mOwner = 0;
 	
 	mSToken = 0;
 	mCToken = 0;
@@ -30,6 +32,12 @@ ChatProtocol::~ChatProtocol()
 	
 	if (mXKey)
 		delete [] mXKey;
+	
+	if (mExeInfo)
+		delete [] mExeInfo;
+	
+	if (mOwner)
+		delete [] mOwner;
 	
 	if (mFileName)
 		delete [] mFileName;
@@ -118,7 +126,8 @@ bool ChatProtocol::genKeyHashes()
 	return true;
 }
 
-bool ChatProtocol::setData(const char *sAccount, const char *sPassword, const char *sKey, const char *sXKey, unsigned int nCToken)
+bool ChatProtocol::setData(const char *sAccount, const char *sPassword, const char *sKey, const char *sXKey, unsigned int nCToken,
+							const char *sExeInfo, const char *sOwner)
 {
 	int len = strlen(sAccount);
 	if (len < 1)
@@ -151,6 +160,25 @@ bool ChatProtocol::setData(const char *sAccount, const char *sPassword, const ch
 	mXKey = new char[len];
 	strcpy(mXKey, sXKey);
 	len = 0;
+	
+	len = strlen(sExeInfo);
+	if (len < 1)
+		return false;
+	len++;
+	mExeInfo = new char[len];
+	strcpy(mExeInfo, sExeInfo);
+	len = 0;
+	
+	len = strlen(sOwner);
+	if (len < 1 || len > 15){  // Owner must be less then 16 characters including null terminator
+		printf("[%s] Owner string to great, max 15 bytes. %u bytes\n", mAccount, len);
+		return false;
+	}
+	len++;
+	mOwner = new char[len];
+	strcpy(mOwner, sOwner);
+	
+	printf("ExeInfo : %s\nOwner : %s\n", mExeInfo, mOwner);
 	
 	mCToken = nCToken;
 	
