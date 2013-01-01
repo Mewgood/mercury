@@ -178,8 +178,6 @@ bool ChatProtocol::setData(const char *sAccount, const char *sPassword, const ch
 	mOwner = new char[len];
 	strcpy(mOwner, sOwner);
 	
-	printf("ExeInfo : %s\nOwner : %s\n", mExeInfo, mOwner);
-	
 	mCToken = nCToken;
 	
 	return true;
