@@ -39,7 +39,7 @@ void calculate_hash(unsigned * buffer)
         for(std::size_t i = 0; i < 0x10; i++)
                         hash_buffer[i] = buffer[i + 5];
 
-        for(std::size_t i = 0x10; i < nil::countof(hash_buffer); i++)
+        for(std::size_t i = 0x10; i < CountOf(hash_buffer); i++)
         {
                         hash = hash_buffer[i - 0x10] ^ hash_buffer[i - 0x8] ^ hash_buffer[i - 0xE] ^ hash_buffer[i - 0x3];
                         hash_buffer[i] = (1 >> (0x20 - (hash & 0xff))) | (1 << (hash & 0xff));
@@ -133,7 +133,7 @@ std::string bsha1(std::string const & input)
         }
 
         std::string output;
-        for(std::size_t i = 0; i < nil::countof(buffer); i++)
+        for(std::size_t i = 0; i < CountOf(buffer); i++)
                 for(std::size_t j = 0; j < dword_size; j++)
                         output.push_back(get_buffer_byte(buffer, i * dword_size + j));
 

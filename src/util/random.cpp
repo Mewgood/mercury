@@ -96,7 +96,7 @@ namespace nil
 		{
 			advanced_offset = 0;
 			
-			if(data.size() < nil::countof(advanced_status) * sizeof(ulong))
+			if(data.size() < CountOf(advanced_status) * sizeof(ulong))
 				throw nil::exception("Seed input too small");
 			bool wrap_around = false;
 			ulong repetition = 1020379;
@@ -106,7 +106,7 @@ namespace nil
 				for(std::size_t j = 0; j < sizeof(ulong); j++)
 					value |= get_byte(data, i + j) << (j * 8);
 
-				for(std::size_t j = 0; j < nil::countof(obfuscation1); j++)
+				for(std::size_t j = 0; j < CountOf(obfuscation1); j++)
 				{
 					rapist fun(obfuscation1[j], obfuscation2[j]);
 					fun.apply(value);
@@ -114,7 +114,7 @@ namespace nil
 
 				value ^= time_passed();
 
-				if(table_offset == nil::countof(advanced_status))
+				if(table_offset == CountOf(advanced_status))
 				{
 					table_offset = 0;
 					wrap_around = true;
@@ -134,7 +134,7 @@ namespace nil
 
 		ulong advanced_uint()
 		{
-			std::size_t size = nil::countof(advanced_status);
+			std::size_t size = CountOf(advanced_status);
 			for(std::size_t i = 0; i < size; i++)
 			{
 				ulong & value = advanced_status[i];
@@ -150,7 +150,7 @@ namespace nil
 				ulong offset2 = uint(0, maximum);
 				ulong & value1 = advanced_status[offset1];
 				ulong & value2 = advanced_status[offset2];
-				for(std::size_t j = 0; j < nil::countof(obfuscation1); j++)
+				for(std::size_t j = 0; j < CountOf(obfuscation1); j++)
 				{
 					rapist fun(obfuscation1[j], obfuscation2[j]);
 					fun.apply(value1);
@@ -164,7 +164,7 @@ namespace nil
 				advanced_offset = 0;
 
 			ulong output = 0;
-			for(std::size_t i = 0; i < nil::countof(advanced_status); i++)
+			for(std::size_t i = 0; i < CountOf(advanced_status); i++)
 			{
 				ulong bit = (advanced_status[i] >> uint(0, static_cast<ulong>(sizeof(ulong) - 1))) & 1; 
 				output <<= 1;

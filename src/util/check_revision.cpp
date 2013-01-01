@@ -147,7 +147,7 @@ check_revision_result_type check_revision(std::string const & formula, std::stri
 
 	a ^= mpq_hash;
 
-	for(std::size_t i = 0; i < nil::countof(d2_files); i++)
+	for(std::size_t i = 0; i < CountOf(d2_files); i++)
 	{
 		std::string content;
 		std::string file = directory + d2_files[i];
