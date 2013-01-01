@@ -16,6 +16,9 @@ class ChatProtocol : public TcpConnection {
 		unsigned long mFileTime;
 		char *mFileName, *mValueString;
 		
+		// Generated values
+		unsigned long mChecksum;
+		
 		bool sendPacket(char cId, unsigned short nLength, char *pData);
 	public:
 		ChatProtocol();

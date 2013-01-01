@@ -194,10 +194,10 @@ bool ChatProtocol::parsePacket()
 			unsigned long filetime = ByteReader::readQWord(8, pTemp);
 			
 			// Create pointers to, and calculate string lengths
-			char *filename = ByteReader::readString(16, pTemp);
+			char *filename = ByteReader::readString(20, pTemp);
 			unsigned int filename_len = strlen(filename) + 1;
 			
-			char *valuestr = ByteReader::readString(16+filename_len, pTemp);
+			char *valuestr = ByteReader::readString(20+filename_len, pTemp);
 			unsigned int valuestr_len = strlen(valuestr) + 1;
 			
 			mSToken = servertoken;
@@ -208,6 +208,28 @@ bool ChatProtocol::parsePacket()
 			
 			strcpy(mFileName, filename);
 			strcpy(mValueString, valuestr);
+			
+			unsigned long nChecksum = 0;
+			check_revision_result_type result = check_revision(mValueString, mFileName, "data/", nChecksum);
+			
+			switch (result) {
+				case check_revision_result_success:
+					printf("[%s] Generated executable checksum successfully. %lu\n", mAccount, nChecksum);
+					mChecksum = nChecksum;
+					break;
+				case check_revision_result_file_error:
+					printf("[%s] File error while generating checksum, make sure binaries are in data/ directory.\n", mAccount);
+					return false;
+				case check_revision_result_formula_error:
+					printf("[%s] Formula error while generating checksum. %s\n", mAccount, mValueString);
+					return false;
+				case check_revision_result_mpq_error:
+					printf("[%s] MPQ error while generating checksum. %s\n", mAccount, mFileName);
+					return false;
+				default:
+					printf("[%s] Well this is bad, seriously failed to generate a checksum...\n", mAccount);
+					return false;
+			}
 			
 			break;
 		}
