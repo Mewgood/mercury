@@ -60,7 +60,7 @@ bool ChatProtocol::sendPacket(char cId, unsigned short nLength, char *pData)
 	return true;
 }
 
-bool ChatProtocol::setData(const char *sAccount, const char *sPassword, const char *sKey, const char *sXKey)
+bool ChatProtocol::setData(const char *sAccount, const char *sPassword, const char *sKey, const char *sXKey, unsigned int nCToken)
 {
 	int len = strlen(sAccount);
 	if (len < 1)
@@ -93,6 +93,8 @@ bool ChatProtocol::setData(const char *sAccount, const char *sPassword, const ch
 	mXKey = new char[len];
 	strcpy(mXKey, sXKey);
 	len = 0;
+	
+	mCToken = nCToken;
 	
 	return true;
 }
@@ -209,6 +211,7 @@ bool ChatProtocol::parsePacket()
 			strcpy(mFileName, filename);
 			strcpy(mValueString, valuestr);
 			
+			// Generate executable checksum
 			unsigned long nChecksum = 0;
 			check_revision_result_type result = check_revision(mValueString, mFileName, "data/", nChecksum);
 			
@@ -229,6 +232,24 @@ bool ChatProtocol::parsePacket()
 				default:
 					printf("[%s] Well this is bad, seriously failed to generate a checksum...\n", mAccount);
 					return false;
+			}
+			
+			//bool hash_d2key(std::string const & cdkey, ulong client_token, ulong server_token, std::string & output, std::string & public_value);
+			
+			// Hash cdkeys
+			std::string d2hash, d2pub, xphash, xppub;
+			
+			// Classic
+			if (!hash_d2key(mKey, mCToken, mSToken, d2hash, d2pub)){
+				printf("[%s] Failed to hash D2DV CDKey. %s\nclient_token %u\nserver_token %u\n", mAccount, mKey, mCToken, mSToken);
+				return false;
+			}
+			printf("[%s] Generated D2DV CDKey hash.\n", mAccount);
+			
+			// Expansion
+			if (!hash_d2key(mXKey, mCToken, mSToken, xphash, xppub)){
+				printf("[%s] Failed to hash D2XP CDKey. %s\nclient_token %u\nserver_token %u\n", mAccount, mXKey, mCToken, mSToken);
+				return false;
 			}
 			
 			break;

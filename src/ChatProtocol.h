@@ -5,6 +5,7 @@
 #include <string.h>
 #include "TcpConnection.h"
 #include "util/check_revision.hpp"
+#include "util/d2cdkey.hpp"
 
 class ChatProtocol : public TcpConnection {
 	private:
@@ -17,14 +18,14 @@ class ChatProtocol : public TcpConnection {
 		char *mFileName, *mValueString;
 		
 		// Generated values
-		unsigned long mChecksum;
+		unsigned int mChecksum;
 		
 		bool sendPacket(char cId, unsigned short nLength, char *pData);
 	public:
 		ChatProtocol();
 		~ChatProtocol();
 		
-		bool setData(const char *sAccount, const char *sPassword, const char *sKey, const char *sXKey);
+		bool setData(const char *sAccount, const char *sPassword, const char *sKey, const char *sXKey, unsigned int nCToken);
 		bool sendProto();
 		bool sendSIDAUTHINFO();
 		

@@ -5,6 +5,7 @@
 #include "ChatProtocol.h"
 #include "ByteReader.h"
 #include "Buffer.h"
+#include "util/utility.hpp"
 
 enum BotStatus {
 	Unconnected = 0,

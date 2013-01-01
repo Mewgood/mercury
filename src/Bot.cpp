@@ -80,7 +80,8 @@ void Bot::printStatus()
 
 bool Bot::run()
 {
-	if (!Chat.setData(mAccount, mPassword, mKey, mXKey)) {
+	mCToken = get_tick_count();
+	if (!Chat.setData(mAccount, mPassword, mKey, mXKey, mCToken)) {
 		printf("[%s] Failed to set configuration...\n", mAccount);
 		mStatus = Dead;
 		return false;
