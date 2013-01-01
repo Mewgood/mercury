@@ -51,11 +51,11 @@ bool ChatProtocol::sendPacket(char cId, unsigned short nLength, char *pData)
 	int tmp = _send(Packet.getBuffer(), len);
 	
 	if (tmp != len) {
-		printf("[BNCS] 0x%02X | Sent %u of expected %u bytes\n", cId, tmp, len);
+		printf("[%s] BNCS << 0x%02X | Sent %u of expected %u bytes\n", mAccount, cId, tmp, len);
 		return false;
 	}
 	
-	printf("[BNCS] 0x%02X | Sent %u bytes\n", cId, len);
+	printf("[%s] BNCS << 0x%02X | Sent %u bytes\n", mAccount, cId, len);
 	
 	return true;
 }
@@ -103,11 +103,11 @@ bool ChatProtocol::sendProto()
 	int tmp = _send("\x01", 1);
 	
 	if (tmp != 1) {
-		printf("[BNCS] 0x01 | Sent %u of expected %u bytes\n", tmp, 1);
+		printf("[%s] BNCS << 0x01 | Sent %u of expected %u bytes\n", mAccount, tmp, 1);
 		return false;
 	}
 	
-	printf("[BNCS] 0x01 | Sent 1 byte\n");
+	printf("[%s] BNCS << 0x01 | Sent 1 byte\n", mAccount);
 		
 	return true;
 }
@@ -139,7 +139,7 @@ bool ChatProtocol::parsePacket()
 	int tmp = _recv(pTemp, 4);
 	
 	if (tmp != 4) {
-		printf("Error : received malformed packet header...\n");
+		printf("Error : malformed packet header...\n");
 		printf("Received %u of expected %u bytes\n", tmp, 4);
 		
 		if (pTemp)
@@ -153,7 +153,7 @@ bool ChatProtocol::parsePacket()
 	
 	delete [] pTemp;
 	
-	printf("[BNCS] 0x%02X | Received header (%u bytes)\n", cId, tmp);
+	printf("[%s] BNCS >> 0x%02X | Received header (%u bytes)\n", mAccount, cId, tmp);
 	
 	nLen -= 4; // Removing packet header from length of 4 bytes, nLen contains the remaing packet size
 	
@@ -170,7 +170,7 @@ bool ChatProtocol::parsePacket()
 		return false;
 	}
 	
-	printf("[BNCS] 0x%02X | Received %u bytes\n", cId, tmp);
+	printf("[%s] BNCS >> 0x%02X | Received %u bytes\n", mAccount, cId, tmp);
 	
 	Buffer buf;
 	// Switch packet id parse as necessary...
