@@ -11,7 +11,7 @@ OBJECTS := $(patsubst %.cpp,%.o,$(SOURCES))
 INCLUDE_DIRS := src
 
 # Add optimisations and remove debugging symbols
-CPPFLAGS +=-g -Wall -Wextra -Wno-multichar -lPocoNet
+CPPFLAGS +=-g -Wall -Wextra -Wno-multichar
 
 .PHONY: all build clean
 
@@ -19,7 +19,7 @@ all: $(NAME)
 
 $(NAME) : $(OBJECTS)
 	@mkdir -p bin
-	@$(LINK.cc) $(OBJECTS) -o bin/$(NAME)
+	@$(LINK.cc) $(OBJECTS) -o bin/$(NAME) -lPocoNet
 
 # Remove $(NAME) from bin/
 clean:
