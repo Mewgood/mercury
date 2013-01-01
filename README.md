@@ -27,7 +27,7 @@ make clean
 
 ### Usage
 ```
-./vox [server] [account] [password] [classic_key] [expansion_key] [exe_info] [key_owner]
+./vox [server] [realm] [account] [password] [character] [classic_key] [expansion_key] [exe_info] [key_owner]
 # Servers, uswest.battle.net, useast.battle.net, europe.battle.net, asia.battle.net
 # Sample exe_info "game.exe 10/19/11 19:48:14 65536"
 # Key owner must be less then 16 characters

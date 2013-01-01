@@ -1,10 +1,10 @@
 #include "Bot.h"
 
-Bot::Bot(const char *sHost, const char *sAccount, const char *sPassword, const char *sKey, const char *sXKey,
+Bot::Bot(const char *sServer, const char *sRealm, const char *sAccount, const char *sPassword, const char *sCharacter ,const char *sKey, const char *sXKey,
 		const char *sExeInfo, const char *sOwner)
 {
 	// Set all pointers to null
-	mHost = 0; mAccount = 0; mPassword = 0; mKey = 0; mXKey = 0;
+	mServer = 0; mAccount = 0; mPassword = 0; mKey = 0; mXKey = 0;
 	
 	mStatus = Unconnected;
 	
@@ -12,9 +12,13 @@ Bot::Bot(const char *sHost, const char *sAccount, const char *sPassword, const c
 	int nLen = 0;
 	
 	// Create buffers for all data and copy from parameters
-	nLen = strlen(sHost)+1;
-	mHost = new char[nLen];
-	strcpy(mHost, sHost);
+	nLen = strlen(sServer)+1;
+	mServer = new char[nLen];
+	strcpy(mServer, sServer);
+	
+	nLen = strlen(sRealm)+1;
+	mRealm = new char[nLen];
+	strcpy(mRealm, sRealm);
 	
 	nLen = strlen(sAccount)+1;
 	mAccount = new char[nLen];
@@ -23,6 +27,10 @@ Bot::Bot(const char *sHost, const char *sAccount, const char *sPassword, const c
 	nLen = strlen(sPassword)+1;
 	mPassword = new char[nLen];
 	strcpy(mPassword, sPassword);
+	
+	nLen = strlen(sCharacter)+1;
+	mCharacter = new char[nLen];
+	strcpy(mCharacter, sCharacter);
 	
 	nLen = strlen(sKey)+1;
 	mKey = new char[nLen];
@@ -44,12 +52,16 @@ Bot::Bot(const char *sHost, const char *sAccount, const char *sPassword, const c
 Bot::~Bot()
 {
 	// Delete all stored data if it exists
-	if (mHost)
-		delete [] mHost;
+	if (mServer)
+		delete [] mServer;
+	if (mRealm)
+		delete [] mRealm;
 	if (mAccount)
 		delete [] mAccount;
 	if (mPassword)
 		delete [] mPassword;
+	if (mCharacter)
+		delete [] mCharacter;
 	if (mKey)
 		delete [] mKey;
 	if (mXKey)
@@ -103,8 +115,8 @@ bool Bot::run()
 	// Connect to protocols, wrap later ( bncs_connect, bncs_disconnect, bncs_logon, mcp_connect, game_connect, game_create, game_join, etc )
 	mStatus = Connecting;
 	
-	printf("[%s] Connecting to %s:%u...\n", mAccount, mHost, 6112);
-	if (!Chat._connect(mHost, 6112)) {
+	printf("[%s] Connecting to %s:%u...\n", mAccount, mServer, 6112);
+	if (!Chat._connect(mServer, 6112)) {
 		printf("[%s] Failed to connect to chat server...\n", mAccount);
 		mStatus = Dead;
 		return false;
