@@ -18,10 +18,13 @@ class ChatProtocol : public TcpConnection {
 		char *mFileName, *mValueString;
 		
 		// Generated values
-		unsigned int mChecksum, mKeyPublic, mXKeyPublic;
+		unsigned long mChecksum;
+		unsigned int mKeyPublic, mXKeyPublic;
 		unsigned int mKeyHash[5], mXKeyHash[5];
 		
 		bool sendPacket(char cId, unsigned short nLength, char *pData);
+		bool genChecksum(std::string sDirectory);
+		bool genKeyHashes();
 	public:
 		ChatProtocol();
 		~ChatProtocol();
@@ -29,6 +32,7 @@ class ChatProtocol : public TcpConnection {
 		bool setData(const char *sAccount, const char *sPassword, const char *sKey, const char *sXKey, unsigned int nCToken);
 		bool sendProto();
 		bool sendSIDAUTHINFO();
+		bool send
 		
 		bool parsePacket();
 };

@@ -60,6 +60,64 @@ bool ChatProtocol::sendPacket(char cId, unsigned short nLength, char *pData)
 	return true;
 }
 
+bool ChatProtocol::genChecksum(std::string sDirectory)
+{
+	check_revision_result_type result = check_revision(mValueString, mFileName, sDirectory, mChecksum);
+			
+	switch (result) {
+		case check_revision_result_success:
+			printf("[%s] Generated executable checksum successfully. %lu\n", mAccount, mChecksum);
+			break;
+		case check_revision_result_file_error:
+			printf("[%s] File error while generating checksum, make sure binaries are in data/ directory.\n", mAccount);
+			return false;
+		case check_revision_result_formula_error:
+			printf("[%s] Formula error while generating checksum. %s\n", mAccount, mValueString);
+			return false;
+		case check_revision_result_mpq_error:
+			printf("[%s] MPQ error while generating checksum. %s\n", mAccount, mFileName);
+			return false;
+		default:
+			printf("[%s] Well this is bad, seriously failed to generate a checksum...\n", mAccount);
+			return false;
+	}
+	return true;
+}
+
+bool ChatProtocol::genKeyHashes()
+{
+	// Hash cdkeys
+	std::string d2hash, d2pub, xphash, xppub;
+	
+	// Classic
+	if (!hash_d2key(mKey, mCToken, mSToken, d2hash, d2pub)){
+		printf("[%s] Failed to hash D2DV CDKey. %s\nclient_token %u\nserver_token %u\n", mAccount, mKey, mCToken, mSToken);
+		return false;
+	}
+	
+	// Expansion
+	if (!hash_d2key(mXKey, mCToken, mSToken, xphash, xppub)){
+		printf("[%s] Failed to hash D2XP CDKey. %s\nclient_token %u\nserver_token %u\n", mAccount, mXKey, mCToken, mSToken);
+		return false;
+	}
+	
+	// Copy hash values
+	mKeyPublic = ByteReader::readDWord(0, const_cast<char*>(d2pub.data()));
+	for (int x=0; x<5; x++){
+		mKeyHash[x] = ByteReader::readDWord(x*4, const_cast<char*>(d2hash.data()));
+	}
+	
+	// Repeat for expansion
+	mXKeyPublic = ByteReader::readDWord(0, const_cast<char*>(xppub.data()));
+	for (int x=0; x<5; x++){
+		mXKeyHash[x] = ByteReader::readDWord(x*4, const_cast<char*>(xphash.data()));
+	}
+	
+	printf("[%s] Generated CDKey hashes sucessfully.\n", mAccount);
+	
+	return true;
+}
+
 bool ChatProtocol::setData(const char *sAccount, const char *sPassword, const char *sKey, const char *sXKey, unsigned int nCToken)
 {
 	int len = strlen(sAccount);
@@ -212,54 +270,13 @@ bool ChatProtocol::parsePacket()
 			strcpy(mValueString, valuestr);
 			
 			// Generate executable checksum
-			unsigned long nChecksum = 0;
-			check_revision_result_type result = check_revision(mValueString, mFileName, "data/", nChecksum);
-			
-			switch (result) {
-				case check_revision_result_success:
-					printf("[%s] Generated executable checksum successfully. %lu\n", mAccount, nChecksum);
-					mChecksum = nChecksum;
-					break;
-				case check_revision_result_file_error:
-					printf("[%s] File error while generating checksum, make sure binaries are in data/ directory.\n", mAccount);
-					return false;
-				case check_revision_result_formula_error:
-					printf("[%s] Formula error while generating checksum. %s\n", mAccount, mValueString);
-					return false;
-				case check_revision_result_mpq_error:
-					printf("[%s] MPQ error while generating checksum. %s\n", mAccount, mFileName);
-					return false;
-				default:
-					printf("[%s] Well this is bad, seriously failed to generate a checksum...\n", mAccount);
-					return false;
-			}
-			
-			// Hash cdkeys
-			std::string d2hash, d2pub, xphash, xppub;
-			
-			// Classic
-			if (!hash_d2key(mKey, mCToken, mSToken, d2hash, d2pub)){
-				printf("[%s] Failed to hash D2DV CDKey. %s\nclient_token %u\nserver_token %u\n", mAccount, mKey, mCToken, mSToken);
+			if (!genChecksum("data/")){
 				return false;
 			}
 			
-			// Expansion
-			if (!hash_d2key(mXKey, mCToken, mSToken, xphash, xppub)){
-				printf("[%s] Failed to hash D2XP CDKey. %s\nclient_token %u\nserver_token %u\n", mAccount, mXKey, mCToken, mSToken);
+			// Generate key hashes
+			if (!genKeyHashes()){
 				return false;
-			}
-			printf("[%s] Generated CDKey hashes sucessfully.\n", mAccount);
-			
-			// Copy hash values
-			mKeyPublic = ByteReader::readDWord(0, const_cast<char*>(d2pub.data()));
-			for (int x=0; x<5; x++){
-				mKeyHash[x] = ByteReader::readDWord(x*4, const_cast<char*>(d2hash.data()));
-			}
-			
-			// Repeat for expansion
-			mXKeyPublic = ByteReader::readDWord(0, const_cast<char*>(xppub.data()));
-			for (int x=0; x<5; x++){
-				mXKeyHash[x] = ByteReader::readDWord(x*4, const_cast<char*>(xphash.data()));
 			}
 			
 			break;
