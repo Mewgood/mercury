@@ -18,7 +18,8 @@ class ChatProtocol : public TcpConnection {
 		char *mFileName, *mValueString;
 		
 		// Generated values
-		unsigned int mChecksum;
+		unsigned int mChecksum, mKeyPublic, mXKeyPublic;
+		unsigned int mKeyHash[5], mXKeyHash[5];
 		
 		bool sendPacket(char cId, unsigned short nLength, char *pData);
 	public:

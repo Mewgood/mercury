@@ -124,8 +124,7 @@ bool Bot::run()
 		printf("[%s] Failed to parse packet... >> 0x50\n", mAccount);
 		mStatus = Dead;
 		return false;
-	}
-	
+	}	
 	
 	printf("[%s] Bot reached end of thread, shutting down...\n", mAccount);
 	return true;

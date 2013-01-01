@@ -193,7 +193,7 @@ bool ChatProtocol::parsePacket()
 			}
 			
 			unsigned int servertoken = ByteReader::readDWord(4, pTemp);
-			unsigned long filetime = ByteReader::readQWord(8, pTemp);
+			unsigned long filetime = ByteReader::readQWord(12, pTemp);
 			
 			// Create pointers to, and calculate string lengths
 			char *filename = ByteReader::readString(20, pTemp);
@@ -234,8 +234,6 @@ bool ChatProtocol::parsePacket()
 					return false;
 			}
 			
-			//bool hash_d2key(std::string const & cdkey, ulong client_token, ulong server_token, std::string & output, std::string & public_value);
-			
 			// Hash cdkeys
 			std::string d2hash, d2pub, xphash, xppub;
 			
@@ -244,14 +242,21 @@ bool ChatProtocol::parsePacket()
 				printf("[%s] Failed to hash D2DV CDKey. %s\nclient_token %u\nserver_token %u\n", mAccount, mKey, mCToken, mSToken);
 				return false;
 			}
-			printf("[%s] Generated D2DV CDKey hash.\n", mAccount);
 			
 			// Expansion
 			if (!hash_d2key(mXKey, mCToken, mSToken, xphash, xppub)){
 				printf("[%s] Failed to hash D2XP CDKey. %s\nclient_token %u\nserver_token %u\n", mAccount, mXKey, mCToken, mSToken);
 				return false;
 			}
-			printf("[%s] Generated D2Xp CDKey hash.\n", mAccount);
+			printf("[%s] Generated CDKey hashes sucessfully.\n", mAccount);
+			
+			// Copy hash values
+			mKeyPublic = ByteReader::readDWord(0, const_char<char*>(d2pub.data()));
+			for (int x=0; x<5; x++){
+				mKeyHash[x] = ByteReader::readDWord(x*4, const_cast<char*>(d2hash.data()));
+			}
+			
+			// Repeat for expansion
 			
 			break;
 		}
