@@ -6,6 +6,8 @@
 #include "TcpConnection.h"
 #include "util/check_revision.hpp"
 #include "util/d2cdkey.hpp"
+#include "util/bsha1.hpp"
+#include "util/string.hpp"
 
 class ChatProtocol : public TcpConnection {
 	private:
@@ -26,6 +28,7 @@ class ChatProtocol : public TcpConnection {
 		bool genChecksum(std::string sDirectory);
 		bool genKeyHashes();
 		bool parseHashResult(char *pTemp);
+		bool parseLogonResult(char *pTemp);
 	public:
 		ChatProtocol();
 		~ChatProtocol();
@@ -35,6 +38,7 @@ class ChatProtocol : public TcpConnection {
 		bool sendProto();
 		bool sendSIDAUTHINFO();
 		bool sendSIDAUTHCHECK();
+		bool sendSIDLOGONRESPONSE();
 		
 		bool parsePacket();
 };

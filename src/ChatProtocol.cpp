@@ -175,6 +175,29 @@ bool ChatProtocol::parseHashResult(char *pTemp)
 	return true;
 }
 
+bool ChatProtocol::parseLogonResult(char *pTemp)
+{
+	unsigned int result = ByteReader::readDWord(0, pTemp);
+	
+	switch (result)
+	{
+		case 0x00:
+			printf("[%s] Logged on to account successfully.\n", mAccount);
+			break;
+		case 0x01:
+			printf("[%s] Account does not exist.\n", mAccount);
+			return false;
+		case 0x02:
+			printf("[%s] Invalid password.\n", mAccount);
+			return false;
+		case 0x06:
+			printf("[%s] Account closed, %s\n", mAccount, ByteReader::readString(4, pTemp));
+			return false;
+	}
+	
+	return true;
+}
+
 bool ChatProtocol::setData(const char *sAccount, const char *sPassword, const char *sKey, const char *sXKey, unsigned int nCToken,
 							const char *sExeInfo, const char *sOwner)
 {
@@ -249,22 +272,22 @@ bool ChatProtocol::sendProto()
 
 bool ChatProtocol::sendSIDAUTHINFO()
 {	
-	Buffer buf;
+	Buffer Packet;
 	
 	// Body
-	buf.addDWord(0x00);		// Protocol ID
-	buf.addDWord('IX86');	// Platform ID
-	buf.addDWord('D2XP');	// Product ID
-	buf.addDWord(0x0D);		// Version byte
-	buf.addDWord('enUS');	// Product lang
-	buf.addDWord(0x00);		// Local IP, 0 appears to work
-	buf.addDWord(0x00);		// Time zone, 0 works
-	buf.addDWord(0x00);		// Locale
-	buf.addDWord(0x00);		// Lang
-	buf.addNTString("USA");
-	buf.addNTString("United States");
+	Packet.addDWord(0x00);		// Protocol ID
+	Packet.addDWord('IX86');	// Platform ID
+	Packet.addDWord('D2XP');	// Product ID
+	Packet.addDWord(0x0D);		// Version byte
+	Packet.addDWord('enUS');	// Product lang
+	Packet.addDWord(0x00);		// Local IP, 0 appears to work
+	Packet.addDWord(0x00);		// Time zone, 0 works
+	Packet.addDWord(0x00);		// Locale
+	Packet.addDWord(0x00);		// Lang
+	Packet.addNTString("USA");
+	Packet.addNTString("United States");
 	
-	return sendPacket(0x50, buf.getSize(), buf.getBuffer());
+	return sendPacket(0x50, Packet.getSize(), Packet.getBuffer());
 }
 
 bool ChatProtocol::sendSIDAUTHCHECK()
@@ -299,6 +322,26 @@ bool ChatProtocol::sendSIDAUTHCHECK()
 	Packet.addNTString(mOwner);
 	
 	return sendPacket(0x51, Packet.getSize(), Packet.getBuffer());
+}
+
+bool ChatProtocol::sendSIDLOGONRESPONSE()
+{
+	// Hash password
+	std::string pass = nil::string::to_lower(mPassword);
+	std::string pass_hash = double_hash(mCToken, mSToken, pass);
+	
+	Buffer Packet;
+	Packet.addDWord(mCToken);
+	Packet.addDWord(mSToken);
+	
+	// Copy hashed data, 5 dwords
+	for (int x=0; x<5; x++){
+		Packet.addDWord(ByteReader::readDWord(x*4, const_cast<char*>(pass_hash.data())));
+	}
+	
+	Packet.addNTString(mAccount);
+	
+	return sendPacket(0x3A, Packet.getSize(), Packet.getBuffer());
 }
 
 bool ChatProtocol::parsePacket()
@@ -393,6 +436,12 @@ bool ChatProtocol::parsePacket()
 		case 0x51:
 		{
 			if (!parseHashResult(pTemp)){
+				return false;
+			}
+		}
+		case 0x3A:
+		{
+			if (!parseLogonResult(pTemp)){
 				return false;
 			}
 		}

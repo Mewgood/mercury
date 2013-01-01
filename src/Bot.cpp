@@ -153,6 +153,20 @@ bool Bot::run()
 		return false;
 	}
 	
+	// 0x3A
+	if (!Chat.sendSIDLOGONRESPONSE()){
+		printf("[%s] Failed to send SID_LOGONRESPONSE <0x3A> packet...\n", mAccount);
+		mStatus = Dead;
+		return false;
+	}
+	
+	// 0x3A
+	if (!Chat.parsePacket()){
+		printf("[%s] Error while parsing packet <0x3A>\n", mAccount);
+		mStatus = Dead;
+		return false;
+	}
+	
 	printf("[%s] Bot reached end of thread, shutting down...\n", mAccount);
 	return true;
 }
