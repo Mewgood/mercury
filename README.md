@@ -28,7 +28,6 @@ make clean
 ### run.sh
 Runs binary in bin/ directory
 ```sh
-./vox "SERVER" "ACCOUNT" "PASSWORD" "CDKEY" "EXPANSION_KEY"
-
 # Encase all fields in quotes ("")
+./vox "SERVER" "ACCOUNT" "PASSWORD" "CDKEY" "EXPANSION_KEY"
 ```
