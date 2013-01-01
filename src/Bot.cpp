@@ -100,7 +100,7 @@ bool Bot::run()
 		return false;
 	}
 	
-	// Connect to protocols, wrap later
+	// Connect to protocols, wrap later ( bncs_connect, bncs_disconnect, bncs_logon, mcp_connect, game_connect, game_create, game_join, etc )
 	mStatus = Connecting;
 	
 	printf("[%s] Connecting to %s:%u...\n", mAccount, mHost, 6112);
@@ -127,14 +127,14 @@ bool Bot::run()
 	
 	// 0x25
 	if (!Chat.parsePacket()) {
-		printf("[%s] Failed to parse expected packet... >> 0x25\n", mAccount);
+		printf("[%s] Error while parsing packet <0x25> \n", mAccount);
 		mStatus = Dead;
 		return false;
 	}
 	
 	// 0x50
 	if (!Chat.parsePacket()) {
-		printf("[%s] Failed to parse packet... >> 0x50\n", mAccount);
+		printf("[%s] Error while parsing packet <0x50>\n", mAccount);
 		mStatus = Dead;
 		return false;
 	}	
@@ -148,7 +148,7 @@ bool Bot::run()
 	
 	// 0x51
 	if (!Chat.parsePacket()){
-		printf("[%s] Failed to parse packet... >> 0x51\n", mAccount);
+		printf("[%s] Error while parsing packet <0x51>\n", mAccount);
 		mStatus = Dead;
 		return false;
 	}
