@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <arpa/inet.h>
 #include "TcpConnection.h"
 #include "util/check_revision.hpp"
 #include "util/d2cdkey.hpp"
@@ -24,11 +25,20 @@ class ChatProtocol : public TcpConnection {
 		unsigned int mKeyPublic, mXKeyPublic;
 		unsigned int mKeyHash[5], mXKeyHash[5];
 		
+		// Realm values
+		unsigned int mRCookie, mRStatus;
+		unsigned int mRChunk1[2], mRChunk2[12];
+		char *mRUniqueName;
+		
+		char mRIp[INET_ADDRSTRLEN];
+		unsigned short mRPort;
+		
 		bool sendPacket(char cId, unsigned short nLength, char *pData);
 		bool genChecksum(std::string sDirectory);
 		bool genKeyHashes();
 		bool parseHashResult(char *pTemp);
 		bool parseLogonResult(char *pTemp);
+		bool parseLogonRealm(char *pTemp);
 	public:
 		ChatProtocol();
 		~ChatProtocol();
@@ -39,6 +49,7 @@ class ChatProtocol : public TcpConnection {
 		bool sendSIDAUTHINFO();
 		bool sendSIDAUTHCHECK();
 		bool sendSIDLOGONRESPONSE();
+		bool sendSIDLOGONREALMEX(const char *sRealm);
 		
 		bool parsePacket();
 };

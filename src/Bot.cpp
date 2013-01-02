@@ -4,7 +4,8 @@ Bot::Bot(const char *sServer, const char *sRealm, const char *sAccount, const ch
 		const char *sExeInfo, const char *sOwner)
 {
 	// Set all pointers to null
-	mServer = 0; mAccount = 0; mPassword = 0; mKey = 0; mXKey = 0;
+	mServer = 0; mRealm = 0; mAccount = 0; mPassword = 0; mCharacter = 0; mKey = 0; mXKey = 0;
+	mExeInfo = 0; mOwner = 0;
 	
 	mStatus = Unconnected;
 	
@@ -174,7 +175,21 @@ bool Bot::run()
 	
 	// 0x3A
 	if (!Chat.parsePacket()){
-		printf("[%s] Error while parsing packet <0x3A>\n", mAccount);
+		printf("[%s] Error while parsing packet SID_LOGONRESPONSE <0x3A>\n", mAccount);
+		mStatus = Dead;
+		return false;
+	}
+	
+	// 0x3E
+	if (!Chat.sendSIDLOGONREALMEX(mRealm)){
+		printf("[%s] Failed to send SID_LOGONREALMEX <0x3E> packet...\n", mAccount);
+		mStatus = Dead;
+		return false;
+	}
+	
+	// 0x3E
+	if (!Chat.parsePacket()){
+		printf("[%s] Error while parsing packet SID_LOGONREALMEX <0x3E>\n", mAccount);
 		mStatus = Dead;
 		return false;
 	}

@@ -14,8 +14,10 @@ ChatProtocol::ChatProtocol()
 	mFileTime = 0;
 	
 	// Set pointers to null
-	mFileName = 0x0;
-	mValueString = 0x0;
+	mFileName = 0;
+	mValueString = 0;
+	
+	mRUniqueName = 0;
 }
 
 ChatProtocol::~ChatProtocol()
@@ -44,6 +46,9 @@ ChatProtocol::~ChatProtocol()
 	
 	if (mValueString)
 		delete [] mValueString;
+	
+	if (mRUniqueName)
+		delete [] mRUniqueName;
 }
 
 bool ChatProtocol::sendPacket(char cId, unsigned short nLength, char *pData)
@@ -198,6 +203,45 @@ bool ChatProtocol::parseLogonResult(char *pTemp)
 	return true;
 }
 
+bool ChatProtocol::parseLogonRealm(char *pTemp)
+{
+	unsigned int cookie, status, ip, port;
+	unsigned int chunk1[2], chunk2[12];
+	
+	cookie = ByteReader::readDWord(0, pTemp);
+	status = ByteReader::readDWord(4, pTemp);
+	
+	ip = ByteReader::readDWord(16, pTemp);
+	
+	//struct sockaddr_in sa;
+	char sip[INET_ADDRSTRLEN];
+	inet_ntop(AF_INET, &ip, sip, INET_ADDRSTRLEN);
+	
+	port = ByteReader::readDWord(20, pTemp);
+	unsigned short nport = ntohs(port);
+	
+	memcpy(&chunk1, pTemp+8, 8);
+	memcpy(&chunk2, pTemp+24, 48);
+	
+	char *uni = ByteReader::readString(72, pTemp);
+	unsigned int uni_len = strlen(uni)+1;
+	
+	mRUniqueName = new char[uni_len];
+	strcpy(mRUniqueName, uni);
+	
+	// Set values
+	mRCookie = cookie;
+	mRStatus = status;
+	
+	strcpy(mRIp, sip);
+	mRPort = nport;
+	
+	memcpy(mRChunk1, chunk1, 8);
+	memcpy(mRChunk2, chunk2, 48);
+	
+	return true;
+}
+
 bool ChatProtocol::setData(const char *sAccount, const char *sPassword, const char *sKey, const char *sXKey, unsigned int nCToken,
 							const char *sExeInfo, const char *sOwner)
 {
@@ -344,6 +388,23 @@ bool ChatProtocol::sendSIDLOGONRESPONSE()
 	return sendPacket(0x3A, Packet.getSize(), Packet.getBuffer());
 }
 
+bool ChatProtocol::sendSIDLOGONREALMEX(const char *sRealm)
+{
+	std::string realm_hash = double_hash(mCToken, mSToken, "password");
+	
+	Buffer Packet;
+	Packet.addDWord(mCToken);
+	
+	// Copy hashed data, 5 dwords
+	for (int x=0; x<5; x++){
+		Packet.addDWord(ByteReader::readDWord(x*4, const_cast<char*>(realm_hash.data())));
+	}
+	
+	Packet.addNTString(sRealm);
+	
+	return sendPacket(0x3E, Packet.getSize(), Packet.getBuffer());
+}
+
 bool ChatProtocol::parsePacket()
 {
 	// Receive packet, header only (4 bytes)
@@ -384,7 +445,6 @@ bool ChatProtocol::parsePacket()
 	
 	printf("[%s] BNCS >> 0x%02X | Received %u bytes\n", mAccount, cId, tmp);
 	
-	Buffer buf;
 	// Switch packet id parse as necessary...
 	switch (cId)
 	{
@@ -438,12 +498,26 @@ bool ChatProtocol::parsePacket()
 			if (!parseHashResult(pTemp)){
 				return false;
 			}
+			break;
 		}
 		case 0x3A:
 		{
 			if (!parseLogonResult(pTemp)){
 				return false;
 			}
+			break;
+		}
+		case 0x3E:
+		{
+			if (tmp>8){
+				if (!parseLogonRealm(pTemp)){
+					return false;
+				}
+			}
+			else{
+				printf("[%s] Failed to logon to realm.\n", mAccount);
+			}
+			break;
 		}
 	}
 	
