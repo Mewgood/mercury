@@ -2,7 +2,7 @@
 
 #include "Bot.h"
 
-#define PROGRAM "vox"
+#define PROGRAM "particle"
 #define VERSION 0.1
 
 
