@@ -1,5 +1,5 @@
 # Project name, used to build executable
-NAME := particle
+NAME := mercury
 
 # Builds list of .cpp files in src/ and src/*/
 SOURCES := $(wildcard src/**/*.cpp src/*.cpp)

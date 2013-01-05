@@ -2,7 +2,7 @@
 
 #include "Bot.h"
 
-#define PROGRAM "particle"
+#define PROGRAM "mercury"
 #define VERSION 0.1
 
 
