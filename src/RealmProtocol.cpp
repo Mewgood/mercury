@@ -139,6 +139,21 @@ bool RealmProtocol::createGame(const char *sName, const char *sPassword, Difficu
 	return sendCREATEGAME(sName, sPassword, eDiff);
 }
 
+bool RealmProtocol::sendJOINGAME(const char *sName, const char *sPassword)
+{
+	Buffer Packet;
+	Packet.addWord(mRequestId);
+	Packet.addNTString(sName);
+	Packet.addNTString(sPassword);
+
+	return sendPacket(0x04, Packet.getSize(), Packet.getBuffer());
+}
+
+bool RealmProtocol::joinGame(const char *sName, const char *sPassword)
+{
+	return sendJOINGAME(sName, sPassword);
+}
+
 bool RealmProtocol::parsePacket()
 {
 	// Receive packet header, 3 bytes
@@ -252,6 +267,24 @@ bool RealmProtocol::parsePacket()
 				{
 					mLastGame = false;
 					printf("[%s] A dead hardcore character can't create games.\n", mAccount);
+				}
+			}
+			break;
+		}
+		case 0x04:
+		{
+			switch (ByteReader::readDWord(14, pTemp))
+			{
+				case 0x00:
+				{
+					mJoined = true;
+					printf("[%s] Successfully joined game. Request Id 0x%02X\n", mAccount, mRequestId);
+					break;
+				}
+				default:
+				{
+					mJoined = false;
+					printf("[%s] Failed to join game. 0x%02X\n", mAccount, ByteReader::readDWord(14, pTemp));
 				}
 			}
 			break;

@@ -261,6 +261,7 @@ bool Bot::run()
 
 	int counter = 0;
 
+	// Create game
 	while (mStatus == Lobby && (!Realm.lastGame()))
 	{
 		if (!Realm.createGame("epicgameyaa", "pwlol", Normal)){
@@ -273,7 +274,8 @@ bool Bot::run()
 			mStatus = Dead;
 			return false;
 		}
-
+		if (Realm.lastGame())
+			break;
 		if (counter>1)
 			break;
 		counter++;
@@ -281,8 +283,20 @@ bool Bot::run()
 		sleep(1);
 	}
 
-	sleep(5);
+	// Join game
 
+	if (!Realm.joinGame("epicgameyaa", "pwlol")) {
+		printf("[%s] Failed to join game.\n", mAccount);
+		mStatus = Lobby;
+	}
+
+	if (!Realm.parsePacket()) {
+		printf("[%s] Failed to parse packet.\n", mAccount);
+		mStatus = Dead;
+		return false;
+	}
+
+	printStatus();
 	printf("[%s] Bot reached end of thread, shutting down...\n", mAccount);
 	return true;
 }

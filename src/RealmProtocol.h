@@ -31,7 +31,7 @@ class RealmProtocol : public TcpConnection {
 		// Game data
 		unsigned short mGameToken;
 
-		bool mLastGame;
+		bool mLastGame, mJoined;
 
 		bool sendPacket(char cId, unsigned short nLength, char *pData);
 	public:
@@ -42,6 +42,7 @@ class RealmProtocol : public TcpConnection {
 		unsigned int getPort() { return mPort; };
 
 		bool lastGame() { return mLastGame; };
+		bool joined() { return mJoined; };
 
 		bool setData(char *sAccount, char *sCharacter);
 		bool setRealmData(ChatProtocol* pChat);
@@ -49,9 +50,11 @@ class RealmProtocol : public TcpConnection {
 		bool sendProto();
 		bool sendMCPSTARTUP();
 		bool sendCHARLOGON();
-		bool sendCREATEGAME(const char *sName, const char* sPassword, Difficulty eDiff);
+		bool sendCREATEGAME(const char *sName, const char *sPassword, Difficulty eDiff);
+		bool sendJOINGAME(const char *sName, const char *sPassword);
 
 		bool createGame(const char *sName, const char *sPassword, Difficulty eDiff);
+		bool joinGame(const char *sName, const char *sPassword);
 
 		bool parsePacket();
 };
