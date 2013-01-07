@@ -87,11 +87,11 @@ void Bot::printStatus()
 		case Connecting:
 			printf("[%s] Status: Connecting to servers.\n", mAccount);
 			break;
-		case Connected:
-			printf("[%s] Status: Connected to servers.\n", mAccount);
+		case ChatConnected:
+			printf("[%s] Status: Connected to chat server.\n", mAccount);
 			break;
 		case Lobby:
-			printf("[%s] Status: Ready to join game.\n", mAccount);
+			printf("[%s] Status: Connected to realm server..\n", mAccount);
 			break;
 		case InGame:
 			printf("[%s] Status: Currently in a D2GS game.\n", mAccount);
@@ -100,7 +100,7 @@ void Bot::printStatus()
 			printf("[%s] Status: Bot died, obviously I did a great job programming.\n", mAccount);
 			break;
 		default:
-			printf("[%s] Status: UNKNOWN\n", mAccount);
+			printf("[%s] Status: Unknown bot status, cool huh?\n", mAccount);
 	}
 }
 

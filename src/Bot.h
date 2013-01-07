@@ -11,7 +11,7 @@
 enum BotStatus {
 	Unconnected = 0,
 	Connecting,
-	Connected,
+	ChatConnected,
 	Lobby,
 	InGame,
 	Dead
