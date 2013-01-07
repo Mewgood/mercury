@@ -198,7 +198,7 @@ bool Bot::run()
 	//////////////// REALM //////////////////
 	/////////////////////////////////////////
 
-	if (!Realm.setData(mAccount)) {
+	if (!Realm.setData(mAccount, mCharacter)) {
 		printf("[%s] Failed to set realm data\n", mAccount);
 		mStatus = Dead;
 		return false;
@@ -223,8 +223,30 @@ bool Bot::run()
 		return false;
 	}
 
+	// 0x01
 	if (!Realm.sendMCPSTARTUP()) {
 		printf("[%s] Failed to send MCP_STARTUP <0x01>\n", mAccount);
+		mStatus = Dead;
+		return false;
+	}
+
+	// 0x01
+	if (!Realm.parsePacket()) {
+		printf("[%s] Error while parsing packet MCP_STARTUP <0x01>\n", mAccount);
+		mStatus = Dead;
+		return false;
+	}
+
+	// 0x07
+	if (!Realm.sendCHARLOGON()) {
+		printf("[%s] Failed to send MCP_CHARLOGON <0x07>\n", mAccount);
+		mStatus = Dead;
+		return false;
+	}
+
+	// 0x07
+	if (!Realm.parsePacket()) {
+		printf("[%s] Error while parsing packet MCP_CHARLOGON <0x07>\n", mAccount);
 		mStatus = Dead;
 		return false;
 	}

@@ -10,7 +10,7 @@
 class RealmProtocol : public TcpConnection {
 	private:
 		// Gereral
-		char *mAccount;
+		char *mAccount, *mCharacter;
 
 		// Realm server data
 		char mIp[INET_ADDRSTRLEN];
@@ -28,11 +28,12 @@ class RealmProtocol : public TcpConnection {
 		char* getIp() { return mIp; };
 		unsigned int getPort() { return mPort; };
 
-		bool setData(char *sAccount);
+		bool setData(char *sAccount, char *sCharacter);
 		bool setRealmData(ChatProtocol* pChat);
 
 		bool sendProto();
 		bool sendMCPSTARTUP();
+		bool sendCHARLOGON();
 
 		bool parsePacket();
 };
