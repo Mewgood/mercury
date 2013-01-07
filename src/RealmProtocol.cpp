@@ -87,3 +87,15 @@ bool RealmProtocol::sendProto()
 
 	return true;
 }
+
+bool RealmProtocol::sendMCPSTARTUP()
+{
+	Buffer Packet;
+	Packet.addDWord(mCookie);
+	Packet.addDWord(mStatus);
+	Packet.copyMem((char*)mChunk1, 8);
+	Packet.copyMem((char*)mChunk2, 48);
+	Packet.addNTString(mUniqueName);
+
+	return sendPacket(0x01, Packet.getSize(), Packet.getBuffer());
+}

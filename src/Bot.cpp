@@ -223,6 +223,12 @@ bool Bot::run()
 		return false;
 	}
 
+	if (!Realm.sendMCPSTARTUP()) {
+		printf("[%s] Failed to send MCP_STARTUP <0x01>\n", mAccount);
+		mStatus = Dead;
+		return false;
+	}
+
 	printf("[%s] Bot reached end of thread, shutting down...\n", mAccount);
 	return true;
 }
