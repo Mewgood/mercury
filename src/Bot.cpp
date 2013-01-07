@@ -198,6 +198,18 @@ bool Bot::run()
 	//////////////// REALM //////////////////
 	/////////////////////////////////////////
 
+	if (!Realm.setData(mAccount)) {
+		printf("[%s] Failed to set realm data\n", mAccount);
+		mStatus = Dead;
+		return false;
+	}
+
+	if (!Realm.setRealmData(&Chat)) {
+		printf("[%s] Failed to set realm data\n", mAccount);
+		mStatus = Dead;
+		return false;
+	}
+
 	printf("[%s] Connecting to %s:%u...\n", mAccount, Realm.getIp(), Realm.getPort());
 	if (!Realm._connect(Realm.getIp(), Realm.getPort())) {
 		printf("[%s] Failed to connect to realm server...\n", mAccount);

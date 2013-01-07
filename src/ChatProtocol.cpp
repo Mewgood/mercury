@@ -239,8 +239,6 @@ bool ChatProtocol::parseLogonRealm(char *pTemp)
 	memcpy(mRChunk1, chunk1, 8);
 	memcpy(mRChunk2, chunk2, 48);
 
-	printf("[%s] D2GS IP : %s:%u\n", mAccount, mRIp, mRPort);
-
 	return true;
 }
 

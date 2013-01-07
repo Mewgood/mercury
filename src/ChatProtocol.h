@@ -57,8 +57,8 @@ class ChatProtocol : public TcpConnection {
 		char* getRealmIp() { return mRIp; };
 		char* getRealmUniqueName() { return mRUniqueName; };
 		unsigned short getRealmPort() { return mRPort; };
-		unsigned int* getRealmCookie() { return mRCookie; };
-		unsigned int* getRealmStatus() { return mRStatus; };
+		unsigned int getRealmCookie() { return mRCookie; };
+		unsigned int getRealmStatus() { return mRStatus; };
 		unsigned int* getRealmChunk1() { return mRChunk1; };
 		unsigned int* getRealmChunk2() { return mRChunk2; };
 

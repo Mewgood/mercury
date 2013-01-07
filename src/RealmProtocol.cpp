@@ -51,3 +51,34 @@ bool RealmProtocol::setData(char *sAccount)
 
 	return true;
 }
+
+bool RealmProtocol::setRealmData(ChatProtocol* pChat)
+{
+	char* ip = pChat->getRealmIp();
+	int len = strlen(ip)+1;
+	strcpy(mIp, ip);
+
+	char* uni = pChat->getRealmUniqueName();
+	len = strlen(ip)+1;
+	mUniqueName = new char[len];
+	strcpy(mUniqueName, uni);
+
+	mPort = pChat->getRealmPort();
+	mCookie = pChat->getRealmCookie();
+	mStatus = pChat->getRealmStatus();
+
+	memcpy(mChunk1, pChat->getRealmChunk1(), 8);
+	memcpy(mChunk2, pChat->getRealmChunk2(), 48);
+
+	return true;
+}
+
+/*
+char* getRealmIp() { return mRIp; };
+char* getRealmUniqueName() { return mRUniqueName; };
+unsigned short getRealmPort() { return mRPort; };
+unsigned int getRealmCookie() { return mRCookie; };
+unsigned int getRealmStatus() { return mRStatus; };
+unsigned int* getRealmChunk1() { return mRChunk1; };
+unsigned int* getRealmChunk2() { return mRChunk2; };
+*/
