@@ -31,6 +31,8 @@ class RealmProtocol : public TcpConnection {
 		bool setData(char *sAccount);
 		bool setRealmData(ChatProtocol* pChat);
 
+		bool sendProto();
+
 		bool parsePacket();
 };
 

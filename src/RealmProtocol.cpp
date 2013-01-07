@@ -73,12 +73,17 @@ bool RealmProtocol::setRealmData(ChatProtocol* pChat)
 	return true;
 }
 
-/*
-char* getRealmIp() { return mRIp; };
-char* getRealmUniqueName() { return mRUniqueName; };
-unsigned short getRealmPort() { return mRPort; };
-unsigned int getRealmCookie() { return mRCookie; };
-unsigned int getRealmStatus() { return mRStatus; };
-unsigned int* getRealmChunk1() { return mRChunk1; };
-unsigned int* getRealmChunk2() { return mRChunk2; };
-*/
+bool RealmProtocol::sendProto()
+{
+	// Send required byte of 0x01 to indicate protocol
+	int tmp = _send("\x01", 1);
+
+	if (tmp != 1) {
+		printf("[%s] REALM << 0x01 | Sent %u of expected %u bytes\n", mAccount, tmp, 1);
+		return false;
+	}
+
+	printf("[%s] REALM << 0x01 | Sent 1 byte\n", mAccount);
+
+	return true;
+}

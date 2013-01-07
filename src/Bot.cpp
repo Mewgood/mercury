@@ -217,6 +217,12 @@ bool Bot::run()
 		return false;
 	}
 
+	if (!Realm.sendProto()) {
+		printf("[%s] Failed to send proto packet...\n", mAccount);
+		mStatus = Dead;
+		return false;
+	}
+
 	printf("[%s] Bot reached end of thread, shutting down...\n", mAccount);
 	return true;
 }
