@@ -31,9 +31,14 @@ class RealmProtocol : public TcpConnection {
 		// Game data
 		unsigned short mGameToken;
 
+		unsigned int mGHash;
+		unsigned short mGToken;
+		char mGIp[INET_ADDRSTRLEN];
+
 		bool mLastGame, mJoined;
 
 		bool sendPacket(char cId, unsigned short nLength, char *pData);
+		bool parseJoinGame(char *pData);
 	public:
 		RealmProtocol();
 		~RealmProtocol();

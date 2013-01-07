@@ -44,6 +44,19 @@ bool RealmProtocol::sendPacket(char cId, unsigned short nLength, char *pData)
 	return true;
 }
 
+bool RealmProtocol::parseJoinGame(char *pData)
+{
+	unsigned int ip = ByteReader::readDWord(6, pData);
+	mGHash = ByteReader::readDWord(10, pData);
+	mGToken = ByteReader::readWord(2, pData);
+
+	char sip[INET_ADDRSTRLEN];
+	inet_ntop(AF_INET, &ip, sip, INET_ADDRSTRLEN);
+	strcpy(mGIp, sip);
+
+	return true;
+}
+
 bool RealmProtocol::setData(char *sAccount, char *sCharacter)
 {
 	if (mAccount)
@@ -279,6 +292,7 @@ bool RealmProtocol::parsePacket()
 				{
 					mJoined = true;
 					printf("[%s] Successfully joined game. Request Id 0x%02X\n", mAccount, mRequestId);
+					parseJoinGame(pTemp);
 					break;
 				}
 				default:
