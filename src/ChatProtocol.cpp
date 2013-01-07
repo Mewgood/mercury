@@ -459,6 +459,9 @@ bool ChatProtocol::parsePacket()
 
 			if (logontype != 0x0) {
 				printf("Error : incorrect logon type, also this error should never happen...\n");
+				if (pTemp)
+					delete [] pTemp;
+
 				return false;
 			}
 
@@ -488,6 +491,8 @@ bool ChatProtocol::parsePacket()
 
 			// Generate key hashes
 			if (!genKeyHashes()){
+				if (pTemp)
+					delete [] pTemp;
 				return false;
 			}
 
@@ -496,6 +501,8 @@ bool ChatProtocol::parsePacket()
 		case 0x51:
 		{
 			if (!parseHashResult(pTemp)){
+				if (pTemp)
+					delete [] pTemp;
 				return false;
 			}
 			break;
@@ -503,6 +510,8 @@ bool ChatProtocol::parsePacket()
 		case 0x3A:
 		{
 			if (!parseLogonResult(pTemp)){
+				if (pTemp)
+					delete [] pTemp;
 				return false;
 			}
 			break;
@@ -511,6 +520,8 @@ bool ChatProtocol::parsePacket()
 		{
 			if (tmp>8){
 				if (!parseLogonRealm(pTemp)){
+					if (pTemp)
+					delete [] pTemp;
 					return false;
 				}
 			}
