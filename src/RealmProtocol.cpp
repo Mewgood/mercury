@@ -5,6 +5,8 @@ RealmProtocol::RealmProtocol()
 	mAccount = 0;
 	mCharacter = 0;
 
+	mRequestId = 0x02;
+
 	mPort	= 0;
 	mCookie	= 0;
 	mStatus	= 0;
@@ -116,6 +118,26 @@ bool RealmProtocol::sendCHARLOGON()
 	return sendPacket(0x07, Packet.getSize(), Packet.getBuffer());
 }
 
+bool RealmProtocol::sendCREATEGAME(const char *sName, const char* sPassword, Difficulty eDiff)
+{
+	Buffer Packet;
+	Packet.addWord(mRequestId);
+	Packet.addDWord(eDiff);
+	Packet.addByte(0x01);
+	Packet.addByte(0xFF); // Unrestricted
+	Packet.addByte(0x08); // 8 players max
+	Packet.addNTString(sName);
+	Packet.addNTString(sPassword);
+	Packet.addByte(0x00); // NUll terminator for game description
+
+	return sendPacket(0x03, Packet.getSize(), Packet.getBuffer());
+}
+
+bool RealmProtocol::createGame(const char *sName, const char *sPassword, Difficulty eDiff)
+{
+	// Create and join eventually.
+	return sendCREATEGAME(sName, sPassword, eDiff);
+}
 
 bool RealmProtocol::parsePacket()
 {
@@ -193,6 +215,44 @@ bool RealmProtocol::parsePacket()
 				}
 				default:
 					printf("[%s] Accepted by realm server.\n", mAccount);
+			}
+			break;
+		}
+		case 0x03:
+		{
+			switch (ByteReader::readDWord(6, pTemp))
+			{
+				case 0x00:
+				{
+					mGameToken = ByteReader::readWord(2, pTemp);
+					mLastGame = true;
+
+					printf("[%s] Successfully created game. Request Id 0x%02X.\n", mAccount, ByteReader::readWord(0, pTemp));
+					break;
+				}
+				case 0x1E:
+				{
+					mLastGame = false;
+					printf("[%s] Invalid game name.\n", mAccount);
+					break;
+				}
+				case 0x1F:
+				{
+					mLastGame = false;
+					printf("[%s] Game already exists.\n", mAccount);
+					break;
+				}
+				case 0x20:
+				{
+					mLastGame = false;
+					printf("[%s] Game servers are down.\n", mAccount);
+					break;
+				}
+				case 0x6E:
+				{
+					mLastGame = false;
+					printf("[%s] A dead hardcore character can't create games.\n", mAccount);
+				}
 			}
 			break;
 		}

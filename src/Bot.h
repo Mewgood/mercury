@@ -2,6 +2,7 @@
 #define __BOT_H__
 
 #include <string.h>
+#include <unistd.h>
 #include "ChatProtocol.h"
 #include "RealmProtocol.h"
 #include "ByteReader.h"

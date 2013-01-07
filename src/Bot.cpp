@@ -194,6 +194,8 @@ bool Bot::run()
 		return false;
 	}
 
+	mStatus = ChatConnected;
+
 	/////////////////////////////////////////
 	//////////////// REALM //////////////////
 	/////////////////////////////////////////
@@ -250,6 +252,36 @@ bool Bot::run()
 		mStatus = Dead;
 		return false;
 	}
+
+	mStatus = Lobby;
+
+	// Loop here, create necessary threads
+
+	// 0x03 Create Game
+
+	int counter = 0;
+
+	while (mStatus == Lobby && (!Realm.lastGame()))
+	{
+		if (!Realm.createGame("epicgameyaa", "pwlol", Normal)){
+			printf("[%s] Failed to create game.\n", mAccount);
+			mStatus = Lobby;
+		}
+
+		if (!Realm.parsePacket()){
+			printf("[%s] Failed to parse packet.\n", mAccount);
+			mStatus = Dead;
+			return false;
+		}
+
+		if (counter>1)
+			break;
+		counter++;
+
+		sleep(1);
+	}
+
+	sleep(5);
 
 	printf("[%s] Bot reached end of thread, shutting down...\n", mAccount);
 	return true;
