@@ -46,9 +46,6 @@ class ChatProtocol : public TcpConnection {
 		bool setData(const char *sAccount, const char *sPassword, const char *sKey, const char *sXKey, unsigned int nCToken,
 					const char *sExeInfo, const char *sOwner);
 
-		bool setRealmData(char* sIp, unsigned short& nPort, unsigned int& nCookie, unsigned int& nStatus, unsigned int* nChunk1,
-							unsigned int* nChunk2, char* sUniqueName);
-
 		bool sendProto();
 		bool sendSIDAUTHINFO();
 		bool sendSIDAUTHCHECK();
@@ -56,6 +53,15 @@ class ChatProtocol : public TcpConnection {
 		bool sendSIDLOGONREALMEX(const char *sRealm);
 
 		bool parsePacket();
+
+		char* getRealmIp() { return mRIp; };
+		char* getRealmUniqueName() { return mRUniqueName; };
+		unsigned short getRealmPort() { return mRPort; };
+		unsigned int* getRealmCookie() { return mRCookie; };
+		unsigned int* getRealmStatus() { return mRStatus; };
+		unsigned int* getRealmChunk1() { return mRChunk1; };
+		unsigned int* getRealmChunk2() { return mRChunk2; };
+
 };
 
 #endif /* __CHATPROTOCOL_H__ */

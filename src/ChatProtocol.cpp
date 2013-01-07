@@ -301,26 +301,6 @@ bool ChatProtocol::setData(const char *sAccount, const char *sPassword, const ch
 	return true;
 }
 
-bool ChatProtocol::setRealmData(char* sIp, unsigned short& nPort, unsigned int& nCookie, unsigned int& nStatus, unsigned int* nChunk1,
-							unsigned int* nChunk2, char* sUniqueName)
-{
-	sIp = new char[INET_ADDRSTRLEN];
-	strcpy(sIp, mRIp);
-
-	int uni_len = strlen(mRUniqueName)+1;
-	sUniqueName = new char[uni_len];
-	strcpy(sUniqueName, mRUniqueName);
-
-	nPort	= mRPort;
-	nCookie	= mRCookie;
-	nStatus	= mRStatus;
-
-	memcpy(nChunk1, &mRChunk1, 8);
-	memcpy(nChunk2, &mRChunk2, 20);
-
-	return true;
-}
-
 bool ChatProtocol::sendProto()
 {
 	// Send required byte of 0x01 to indicate protocol
